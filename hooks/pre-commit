@@ -1,5 +1,8 @@
 #!/bin/bash
 
+cppformat="{}"
+cpplint="-whitespace/comments"
+
 status=0
 for changed in `git diff --staged --name-only`
 do
@@ -11,9 +14,9 @@ do
 
     case "${extension}" in
       "c"|"h"|"cpp"|"hpp" )
-        colordiff -u ${path} <(clang-format ${path})
-        clang-format -i ${path}
-        if ! cpplint ${path}; then
+        colordiff -u ${path} <(clang-format -style="${cppformat}" ${path})
+        clang-format -i -style="${cppformat}" ${path}
+        if ! cpplint --filter=${cpplint} ${path}; then
           status=1
         fi;;
     esac
