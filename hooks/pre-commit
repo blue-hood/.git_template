@@ -1,19 +1,25 @@
 #!/bin/bash
 
+status=0
 for changed in `git diff --staged --name-only`
 do
   path=`git rev-parse --show-toplevel`/${changed}
 
   if [ -e ${path} ]; then
-    case "${path##*.}" in
+    basename=`basename ${changed}`
+    extension=${basename##*.}
+
+    case "${extension}" in
       "c"|"h"|"cpp"|"hpp" )
         colordiff -u ${path} <(clang-format ${path})
         clang-format -i ${path}
         if ! cpplint ${path}; then
-          exit 1
+          status=1
         fi;;
     esac
 
     git add ${path}
   fi
 done
+
+exit ${status}
