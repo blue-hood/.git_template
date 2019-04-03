@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cppformat="{}"
-cpplint="-whitespace/comments"
+cpplint="-whitespace/comments,-whitespace/indent"
 
 status=0
 for changed in `git diff --staged --name-only`
@@ -16,7 +16,7 @@ do
       "c"|"h"|"cpp"|"hpp" )
         colordiff -u ${path} <(clang-format -style="${cppformat}" ${path})
         clang-format -i -style="${cppformat}" ${path}
-        if ! cpplint --filter=${cpplint} ${path}; then
+        if ! cpplint --filter=${cpplint} --quiet ${path}; then
           status=1
         fi;;
     esac
