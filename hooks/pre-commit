@@ -2,6 +2,8 @@
 
 cppformat="{}"
 cpplint="-whitespace/comments,-whitespace/indent"
+phpmd="cleancode,codesize,controversial,design,naming,unusedcode"
+tmppath="/tmp/precommit"
 
 status=0
 for changed in `git diff --staged --name-only`
@@ -19,6 +21,16 @@ do
         if ! cpplint --filter=${cpplint} --quiet ${path}; then
           status=1
         fi;;
+      
+      "php" )
+        cp ${path} ${tmppath}
+        php-cs-fixer fix -q --using-cache no --diff --diff-format udiff ${path}
+        colordiff -u ${tmppath} ${path}
+        rm ${tmppath}
+        if ! phpmd ${path} text ${phpmd}; then
+          status=1
+        fi;;
+
     esac
 
     git add ${path}
