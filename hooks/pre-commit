@@ -3,7 +3,7 @@
 cppformat="{}"
 cpplint="-whitespace/comments,-whitespace/indent"
 phpmd="cleancode,codesize,controversial,design,naming,unusedcode"
-tmppath="/tmp/precommit"
+tmppath="/tmp/pre-commit"
 
 status=0
 for changed in `git diff --staged --name-only`
