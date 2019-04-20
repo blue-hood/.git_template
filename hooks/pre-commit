@@ -31,6 +31,10 @@ do
           status=1
         fi;;
 
+      "js"|"html"|"css"|"scss" )
+        colordiff -u ${path} <(prettier ${path})
+        prettier --write ${path};;
+
     esac
 
     git add ${path}
