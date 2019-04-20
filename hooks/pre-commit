@@ -29,7 +29,7 @@ do
           status=1
         fi;;
 
-      "js"|"html"|"css"|"scss" )
+      "js"|"html"|"css"|"scss"|"yaml"|"yml"|"md" )
         colordiff -u ${path} <(prettier ${prettier} ${path})
         prettier --write ${prettier} ${path};;
 
