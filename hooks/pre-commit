@@ -3,7 +3,7 @@
 cppformat="{}"
 cpplint="-whitespace/comments,-whitespace/indent"
 phpmd="cleancode,codesize,controversial,design,naming,unusedcode"
-tmppath="/tmp/pre-commit"
+prettier="--print-width 120"
 
 status=0
 for changed in `git diff --staged --name-only`
@@ -23,17 +23,15 @@ do
         fi;;
       
       "php" )
-        cp ${path} ${tmppath}
-        php-cs-fixer fix -q --using-cache no --diff --diff-format udiff ${path}
-        colordiff -u ${tmppath} ${path}
-        rm ${tmppath}
+        colordiff -u ${path} <(prettier ${prettier} ${path})
+        prettier --write ${prettier} ${path}
         if ! phpmd ${path} text ${phpmd}; then
           status=1
         fi;;
 
       "js"|"html"|"css"|"scss" )
-        colordiff -u ${path} <(prettier ${path})
-        prettier --write ${path};;
+        colordiff -u ${path} <(prettier ${prettier} ${path})
+        prettier --write ${prettier} ${path};;
 
     esac
 
